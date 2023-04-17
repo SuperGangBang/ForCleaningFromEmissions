@@ -1,0 +1,15 @@
+def impute_outliers_IQR(df):
+    q1=df.quantile(0.25)
+    q3=df.quantile(0.75)
+    IQR=q3-q1
+    upper = df[~(df>(q3+1.5*IQR))].max()
+    lower = df[~(df<(q1-1.5*IQR))].min()
+    df = np.where(df > upper,
+       df.mean(),
+       np.where(
+           df < lower,
+           df.mean(),
+           df
+           )
+       )
+    return df
